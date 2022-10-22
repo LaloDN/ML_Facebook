@@ -1,0 +1,50 @@
+Fase de análisis descriptivo:
+El objetivo de este proyecto es tratar de predecir la cantidad de interacciones que tendrá un post.
+Las entradas del data set no son tan grandes, por lo que se procederá con una validación cruzada
+para el método de remuestreo.
+Hay una cantidad moderada de columnas, por lo que tal vez se eliminen un par de ellas.
+La mayoría de las columnas son de tipo enteras o flotantes a excepción de "Type" por lo que se 
+procederá a hacer un One-Hot-encoding.
+Hay solo un par de datos nulos en las columnas paid, like y share, posiblemente se aplique una imputación simple.
+En el análisis de describe parece no haber nada raro a simple vista, a excepción de aquellas columnas con valores NaN.
+RidgeRegression y SVR con un kernel lineal apuntan para ser los mejores modelos para este conjunto de datos.
+
+Nota: df.info() puede hacer lo mismo que .isnull().sum() y .dtypes combinados.
+
+Fase de análisis gráfico:
+
+*Histogramas*
+-Page total likes tiene sesgo hacía la derecha
+-Category tiene forma de triple distribución gaussiana
+-Post month parece tener una distrubción gaussiana semi doble
+-Post weekday tiene una meseta
+-Post hour tiene una doble distribución gaussiana
+-Paid tiene una doble distribución gaussiana
+-LP reach parece ser una distribución gaussiana con un outliers en la derecha
+-LP total impressions parece tener una distribución gaussiana pero esta un poco desbalnceada
+-L Engaged users tiene un poco de sesgo en la derecha
+-LP consumers tiene sesgo en la izquierda
+-LP Consumptions parece tener sesgo en la izquierda
+-LP impresions by people liked page parece tener forma de distribución gaussiana pero con sesgo en la izquierda
+-Nota: todas las demás características parecen compartir el mismo patrón: asemejan una distribución gaussiana pero
+con lago de sesgo en la parte izquierda.
+-Solo LP liked page andengaged post parece tener la mejor forma de una distrbución gaussiana y con menos sesgo
+
+*Mapa de calor*
+-Post month y page total likes tienen una alta correlación entre sí y tienen una relación casi nula
+con el objetivo, muy probablemente se tengan que eliminar.
+-L engaged users y LP consumers tienen una correlación casi perfecta y una relación media con el objetivo,
+muy probablemente también tenga que quitarse.
+-LP total impressions y LP impressions by people liked page tienen una alta correlación  entre sí y una
+relación con el objetivo algo baja.
+-LP liked page andengaged post y L engaged users muestran una correlación muy alta, pero muestran una 
+realción bastante decente con el objetivo.
+-LP liked page andengaged post también tiene una correlación alta con LP consumers, probablemente se tenga
+que remover esta característica por tener dos altas correlaciones
+-Comment, like y share tienen una alta correalción entre sí, aunque son las mejores características para
+el objetivo llegando a tener una correlación fuerte las 3.
+
+
+Fase de modelado:
+Aplicando el procesamiento de los datos y basandonos en la métrica de negative mean absolute error, los mejores
+algoritmos son LASSO con -0.65 y 0.94 de varianza, Ridge con -1.84 y 0.64 de varianza y regresión lineal con -0.21 y 0.19 de varianza.
